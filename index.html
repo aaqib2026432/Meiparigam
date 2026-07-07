@@ -86,8 +86,7 @@
     position:fixed;
     top:0; left:0; width:100%;
     z-index:999;
-    background:rgba(23,56,34,0.96);
-    backdrop-filter:blur(6px);
+    background:rgba(20,48,29,0.98);
     border-bottom:1px solid rgba(200,155,60,0.35);
     transition:padding .25s ease;
   }
@@ -167,6 +166,15 @@
     display:block;
   }
 
+  .menu-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,20,12,0.45);
+    z-index:1000;
+  }
+  .menu-overlay.active{ display:block; }
+
   @media (max-width: 860px){
     nav.links{
       position:fixed;
@@ -176,6 +184,8 @@
       box-shadow:-4px 0 20px rgba(0,0,0,.3);
       transition:right .3s ease;
       padding-top:90px;
+      z-index:1001;
+      overflow-y:auto;
     }
     nav.links.active{ right:0; }
     nav.links ul{
@@ -183,7 +193,7 @@
       padding:0 20px;
     }
     nav.links a{ display:block; }
-    .menu-icon{ display:flex; }
+    .menu-icon{ display:flex; position:relative; z-index:1002; }
   }
 
   /* ---------- Hero ---------- */
@@ -315,7 +325,7 @@
     .about-grid{ grid-template-columns:1fr; }
   }
 
-  .features{ background:#fff; }
+  .features{ background:var(--ivory); }
   .feature-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -323,7 +333,7 @@
   }
   .feature-card{
     padding:30px 22px;
-    background:var(--ivory);
+    background:#fff;
     border:1px solid #e9e2d0;
     border-radius:var(--radius);
     text-align:left;
@@ -417,7 +427,7 @@
   #whatsapp-icon{
     position:fixed;
     bottom:22px; right:22px;
-    z-index:999;
+    z-index:900;
     width:58px;height:58px;
     border-radius:50%;
     background:#25D366;
@@ -445,7 +455,7 @@
 <header>
   <div class="nav-inner">
     <a class="brand" href="#top">
-      <img src="images/logo.jpg" alt="MEI logo" onerror="this.style.display='none'">
+      <img src="https://cdn.jsdelivr.net/gh/aaqib2026432/Meiparigam@main/logo.jpg" alt="MEI logo" onerror="this.style.display='none'">
       <span class="brand-text">
         <strong>Mohammadiya Educational Institute</strong>
         <span>Parigam</span>
@@ -468,6 +478,7 @@
     </button>
   </div>
 </header>
+<div class="menu-overlay" id="menuOverlay"></div>
 
 <main id="main">
   <section class="hero" id="top">
@@ -500,7 +511,7 @@
         <p>Our aim is simple: help every student thrive academically and spiritually, and leave Mohammadiya ready to carry both knowledge and character into their lives.</p>
       </div>
       <div class="frame">
-        <img src="images/ima.jpg" alt="Mohammadiya Educational Institute campus" onerror="this.parentElement.style.display='flex'; this.style.display='none'">
+        <img src="https://cdn.jsdelivr.net/gh/aaqib2026432/Meiparigam@main/ima.jpg" alt="Mohammadiya Educational Institute campus" onerror="this.parentElement.style.display='flex'; this.style.display='none'">
       </div>
     </div>
   </section>
@@ -546,9 +557,9 @@
       <div class="divider"></div>
       <div class="slider">
         <div class="slider-track" id="sliderTrack">
-          <li><img src="images/mei.jpg" alt="Campus photo 1" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></li>
-          <li><img src="images/imb.jpg" alt="Campus photo 2" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></li>
-          <li><img src="images/imc.jpg" alt="Campus photo 3" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></li>
+          <figure><img src="https://cdn.jsdelivr.net/gh/aaqib2026432/Meiparigam@main/mei.jpg" alt="Campus photo 1" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></figure>
+          <figure><img src="https://cdn.jsdelivr.net/gh/aaqib2026432/Meiparigam@main/imb.jpg" alt="Campus photo 2" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></figure>
+          <figure><img src="https://cdn.jsdelivr.net/gh/aaqib2026432/Meiparigam@main/imc.jpg" alt="Campus photo 3" onerror="this.parentElement.style.background='linear-gradient(135deg,#1F4D2C,#173822)'; this.remove()"></figure>
         </div>
       </div>
     </div>
@@ -602,14 +613,23 @@
 <script>
   const menuBtn = document.getElementById('menuBtn');
   const menu = document.getElementById('menu');
-  menuBtn.addEventListener('click', () => {
-    const open = menu.classList.toggle('active');
-    menuBtn.setAttribute('aria-expanded', open);
-  });
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  const overlay = document.getElementById('menuOverlay');
+
+  function openMenu(){
+    menu.classList.add('active');
+    overlay.classList.add('active');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu(){
     menu.classList.remove('active');
+    overlay.classList.remove('active');
     menuBtn.setAttribute('aria-expanded', 'false');
-  }));
+  }
+  menuBtn.addEventListener('click', () => {
+    menu.classList.contains('active') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
   const track = document.getElementById('sliderTrack');
   const slider = document.querySelector('.slider');
